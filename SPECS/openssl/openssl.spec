@@ -8,8 +8,8 @@
 
 Summary: Utilities from the general purpose cryptography library with TLS implementation
 Name: openssl
-Version: 3.1.4
-Release: 7%{?dist}
+Version: 3.3.0
+Release: 1%{?dist}
 Vendor:         Microsoft Corporation
 Distribution:   Azure Linux
 Source: https://www.openssl.org/source/openssl-%{version}.tar.gz
@@ -55,12 +55,12 @@ Patch35:  0035-speed-skip-unavailable-dgst.patch
 # # Selectively disallow SHA1 signatures rhbz#2070977
 # AZL: NOTE: Had to change this patch because of cascading changes from previous AZL note(s)
 Patch49:  0049-Allow-disabling-of-SHA1-signatures.patch
-# # Support SHA1 in TLS in LEGACY crypto-policy (which is SECLEVEL=1)
+# # # Support SHA1 in TLS in LEGACY crypto-policy (which is SECLEVEL=1)
 Patch52:  0052-Allow-SHA1-in-seclevel-1-if-rh-allow-sha1-signatures.patch
-# # https://github.com/openssl/openssl/pull/13817
-Patch79:  0079-RSA-PKCS15-implicit-rejection.patch
-# See notes in the patch for details, but this patch will not be needed if
-# the openssl issue https://github.com/openssl/openssl/issues/7048 is ever implemented and released.
+# # # https://github.com/openssl/openssl/pull/13817
+# # Patch79:  0079-RSA-PKCS15-implicit-rejection.patch
+# # See notes in the patch for details, but this patch will not be needed if
+# # the openssl issue https://github.com/openssl/openssl/issues/7048 is ever implemented and released.
 Patch80:  0001-Replacing-deprecated-functions-with-NULL-or-highest.patch
 
 License: Apache-2.0
@@ -335,6 +335,7 @@ install -m644 %{SOURCE9} \
 %{_libdir}/*.so
 %{_mandir}/man3/*
 %{_libdir}/pkgconfig/*.pc
+%{_libdir}/cmake/OpenSSL/*.cmake
 
 %files static
 %{_libdir}/*.a
