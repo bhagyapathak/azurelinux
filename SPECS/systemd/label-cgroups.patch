@@ -1,0 +1,39 @@
+diff --git a/src/shared/cgroup-setup.c b/src/shared/cgroup-setup.c
+index 6896a03da5..ac99a4d16e 100644
+--- a/src/shared/cgroup-setup.c
++++ b/src/shared/cgroup-setup.c
+@@ -8,8 +8,10 @@
+ #include "fd-util.h"
+ #include "fileio.h"
+ #include "fs-util.h"
++#include "label-util.h"
+ #include "missing_threads.h"
+ #include "mkdir.h"
++#include "mkdir-label.h"
+ #include "parse-util.h"
+ #include "path-util.h"
+ #include "proc-cmdline.h"
+@@ -307,16 +309,20 @@ int cg_create(const char *controller, const char *path) {
+         if (r < 0)
+                 return r;
+ 
+-        r = mkdir_parents(fs, 0755);
++        r = mkdir_parents_label(fs, 0755);
+         if (r < 0)
+                 return r;
+ 
+-        r = RET_NERRNO(mkdir(fs, 0755));
++        r = mkdir_label(fs, 0755);
+         if (r == -EEXIST)
+                 return 0;
+         if (r < 0)
+                 return r;
+-
++#if 0
++        r = label_fix_full(AT_FDCWD, /* inode_path= */ fs, /* label_path= */ fs, 0);
++        if (r < 0)
++                return r;
++#endif
+         r = cg_hybrid_unified();
+         if (r < 0)
+                 return r;
